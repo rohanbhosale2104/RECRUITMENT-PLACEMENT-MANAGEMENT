@@ -1,0 +1,10 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}{{ title }}{% endblock %} | Recruitment &amp; Placement Management System</title><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head><body>
+<div class="header"><div class="brand"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Kiran Academy"><h1>Recruitment &amp; Placement Management System</h1></div>
+<div class="user"><div><b>{{ user.name }}</b><small>{{ user.role }}</small></div><a class="btn sec sm" href="{{ url_for('logout') }}">Logout</a></div></div>
+<div class="layout"><div class="sidebar">
+{% for n, u, ep in [('Dashboard','dashboard','dashboard'),('Candidates','candidates','candidates'),('Companies','companies','companies'),('Jobs','jobs','jobs'),('Applications','applications','applications'),('Interviews','interviews','interviews'),('Placement Process','placement-process','placement_process'),('Reports','reports','reports')] %}
+<a href="{{ url_for(ep) }}"{% if active == u %} class="active"{% endif %}>{{ n }}</a>{% endfor %}<a href="{{ url_for('logout') }}">Logout</a></div>
+<div class="content"><div class="crumb">Home &raquo; {{ title }}</div><h2 class="title">{{ title }}</h2>
+{% for cat, msg in get_flashed_messages(with_categories=true) %}<div class="alert {{ cat }}">{{ msg }}</div>{% endfor %}
+{% block body %}{% endblock %}</div></div></body></html>

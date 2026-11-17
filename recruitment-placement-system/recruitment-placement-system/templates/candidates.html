@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% from '_m.html' import field %}{% set title = 'Candidates' %}{% block body %}
+<form method="get" class="panel"><h3>Search Filters</h3><div class="grid">
+{{ field('Candidate ID', 'cid', a.get('cid','')) }}{{ field('Candidate Name', 'name', a.get('name','')) }}{{ field('Mobile', 'mobile', a.get('mobile','')) }}{{ field('Email', 'email', a.get('email','')) }}
+{{ field('Technology', 'tech', a.get('tech',''), 'select', O(techs, True)) }}{{ field('Passing Year', 'year', a.get('year',''), 'select', O(years, True)) }}{{ field('Qualification', 'qual', a.get('qual',''), 'select', O(quals, True)) }}
+{{ field('Placement Status', 'status', a.get('status',''), 'select', [('','All'),('ACTIVE','Active'),('PLACED','Placed'),('ON_HOLD','On Hold'),('INACTIVE','Inactive')]) }}</div>
+<div class="actions"><button class="btn" type="submit">Search</button><a class="btn sec" href="{{ url_for('candidates') }}">Reset</a><a class="btn green" href="{{ url_for('candidate_form') }}">Add Candidate</a></div></form>
+<div class="card"><div class="bar"><h3 style="margin:0">Candidate Results ({{ total }})</h3><a class="btn" href="{{ url_for('candidate_form') }}">+ Add Candidate</a></div>
+<div class="tw"><table><thead><tr><th>ID</th><th>Name</th><th>Technology</th><th>Qualification</th><th>Year</th><th>%</th><th>Mobile</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for c in rows %}<tr><td>{{ c.candidate_code }}</td><td><a href="{{ url_for('candidate_details', cid=c.candidate_id) }}">{{ c.full_name }}</a></td><td>{{ c.primary_technology }}</td><td>{{ c.qualification }}</td><td>{{ c.passing_year }}</td><td>{{ c.percentage }}</td><td>{{ c.mobile }}</td>
+<td>{{ ('PLACED' if c.placement_status == 'PLACED' else c.profile_status)|badge }}</td><td><a class="btn sm" href="{{ url_for('candidate_details', cid=c.candidate_id) }}">View</a> <a class="btn sm sec" href="{{ url_for('candidate_form', cid=c.candidate_id) }}">Edit</a></td></tr>
+{% else %}<tr><td colspan="9">No candidates found.</td></tr>{% endfor %}</tbody></table></div>
+<div class="pager"><span>Page {{ page }} of {{ pages }}</span>{% if page > 1 %}<a href="{{ url_for('candidates', page=page-1, **qs) }}">&laquo;</a>{% endif %}
+{% for n in range(1, pages + 1) %}<a class="{{ 'cur' if n == page }}" href="{{ url_for('candidates', page=n, **qs) }}">{{ n }}</a>{% endfor %}{% if page < pages %}<a href="{{ url_for('candidates', page=page+1, **qs) }}">&raquo;</a>{% endif %}</div></div>
+{% endblock %}

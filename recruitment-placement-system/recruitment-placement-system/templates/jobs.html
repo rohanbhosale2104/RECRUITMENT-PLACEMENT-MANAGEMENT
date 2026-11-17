@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% from '_m.html' import field, stats %}{% set title = 'Job Openings' %}{% block body %}
+{{ stats([(cnt.get('OPEN',0),'Open Jobs','g'),(cnt.get('DRAFT',0),'Draft Jobs','o'),(cnt.get('CLOSED',0),'Closed Jobs',''),(cnt.get('CANCELLED',0),'Cancelled','p')]) }}
+<form method="get" class="panel"><h3>Search Filters</h3><div class="grid">{{ field('Job Code','code',a.get('code','')) }}{{ field('Company','company',a.get('company',''),'select',[('','All')]+comps) }}
+{{ field('Technology','tech',a.get('tech',''),'select',O(techs,True)) }}{{ field('Location','location',a.get('location','')) }}{{ field('Job Status','status',a.get('status',''),'select',O(['DRAFT','OPEN','CLOSED','CANCELLED'],True)) }}
+{{ field('Employment Type','etype',a.get('etype',''),'select',O(['FULL_TIME','INTERNSHIP','CONTRACT'],True)) }}</div>
+<div class="actions"><button class="btn" type="submit">Search</button><a class="btn sec" href="{{ url_for('jobs') }}">Reset</a><a class="btn green" href="{{ url_for('job_form') }}">Create Job</a></div></form>
+<div class="card"><div class="bar"><h3 style="margin:0">Job Openings</h3><a class="btn" href="{{ url_for('job_form') }}">+ Create Job</a></div><div class="tw"><table><thead><tr><th>Job Code</th><th>Company</th><th>Title</th><th>Technology</th><th>Openings</th><th>Location</th><th>Package (LPA)</th><th>Deadline</th><th>Applications</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for j in rows %}<tr><td>{{ j.job_code }}</td><td>{{ j.company_name }}</td><td>{{ j.job_title }}</td><td>{{ j.required_technology }}</td><td>{{ j.openings }}</td><td>{{ j.location }}</td><td>{{ j.min_package_lpa }}-{{ j.max_package_lpa }}</td><td>{{ j.application_deadline|d }}</td><td>{{ j.apps }}</td><td>{{ j.status|badge }}</td>
+<td><a class="btn sm sec" href="{{ url_for('job_form', jid=j.job_id) }}">Edit</a> <a class="btn sm" href="{{ url_for('applications', job=j.job_id) }}">View Applications</a></td></tr>{% else %}<tr><td colspan="11">No jobs found.</td></tr>{% endfor %}</tbody></table></div></div>
+{% endblock %}

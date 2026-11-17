@@ -1,0 +1,11 @@
+{% macro field(label, name, val='', kind='text', opts=None, req=False, err=None, help=None, multi=False, attrs='') %}
+{% set v = '' if val is none else val %}
+<div class="f{% if err %} bad{% endif %}"><label>{{ label }}{% if req %} <span class="req">*</span>{% endif %}</label>
+{% if kind == 'select' %}<select name="{{ name }}"{% if multi %} multiple size="4"{% endif %}>
+{% for o in opts %}<option value="{{ o[0] }}"{% if (multi and o[0]|string in v) or (not multi and o[0]|string == v|string) %} selected{% endif %}>{{ o[1] }}</option>{% endfor %}</select>
+{% elif kind == 'textarea' %}<textarea name="{{ name }}">{{ v }}</textarea>
+{% else %}<input type="{{ kind }}" name="{{ name }}" value="{{ v }}" {{ attrs|safe }}>{% endif %}
+{% if err %}<div class="err">{{ err }}</div>{% endif %}{% if help %}<div class="help">{{ help }}</div>{% endif %}</div>
+{% endmacro %}
+{% macro stats(items) %}<div class="cards">{% for n, l, c in items %}<div class="stat {{ c }}"><div class="n">{{ n }}</div><div class="l">{{ l }}</div></div>{% endfor %}</div>{% endmacro %}
+{% macro bars(items, color='#1d4ed8') %}<div class="fun">{% for i in items %}<div class="row"><div class="lb">{{ i.label }}</div><div class="tr"><div class="fl" style="width:{{ i.w }}%;background:{{ color }}">{{ i.n }}</div></div></div>{% endfor %}</div>{% endmacro %}

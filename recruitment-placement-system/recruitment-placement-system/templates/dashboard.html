@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% from '_m.html' import stats, bars %}{% set title = 'Dashboard' %}{% block body %}
+{{ stats([(s.cand,'Total Candidates',''),(s.active,'Active Candidates','g'),(s.comp,'Companies','o'),(s.jobs,'Open Jobs','p'),(s.apps,'Applications',''),(s.ints,'Interviews Today','o'),(s.sel,'Selected','g'),(s.placed,'Placed','p')]) }}
+<div class="two"><div class="card"><h3>Recruitment Funnel</h3>{{ bars(fun) }}</div>
+<div class="card"><h3>Quick Actions</h3><div class="actions" style="margin-top:0"><a class="btn" href="{{ url_for('candidate_form') }}">Add Candidate</a><a class="btn" href="{{ url_for('job_form') }}">Create Job</a><a class="btn" href="{{ url_for('interviews') }}">Schedule Interview</a></div>
+<div class="actions"><a class="btn sec" href="{{ url_for('candidates') }}">View Candidates</a><a class="btn sec" href="{{ url_for('jobs', status='OPEN') }}">View Open Jobs</a><a class="btn sec" href="{{ url_for('interviews') }}">View Interviews</a><a class="btn sec" href="{{ url_for('reports') }}">View Reports</a></div></div></div>
+<div class="card"><h3>Upcoming Interviews</h3><div class="tw"><table><thead><tr><th>ID</th><th>Candidate</th><th>Company</th><th>Round</th><th>Date &amp; Time</th><th>Mode</th><th>Status</th></tr></thead><tbody>
+{% for i in upcoming %}<tr><td>INT{{ 1000 + i.interview_id }}</td><td>{{ i.full_name }}</td><td>{{ i.company_name }}</td><td>{{ i.round_type }}</td><td>{{ i.scheduled_date|d }} {{ i.scheduled_time|t }}</td><td>{{ i.mode|badge }}</td><td>{{ i.status|badge }}</td></tr>{% else %}<tr><td colspan="7">No upcoming interviews.</td></tr>{% endfor %}</tbody></table></div></div>
+<div class="two"><div class="card"><h3>Recent Job Openings</h3><div class="tw"><table><thead><tr><th>Job Code</th><th>Company</th><th>Title</th><th>Status</th></tr></thead><tbody>
+{% for j in jobs %}<tr><td>{{ j.job_code }}</td><td>{{ j.company_name }}</td><td>{{ j.job_title }}</td><td>{{ j.status|badge }}</td></tr>{% endfor %}</tbody></table></div></div>
+<div class="card"><h3>Recent Placements</h3><div class="tw"><table><thead><tr><th>Candidate</th><th>Company</th><th>Package</th><th>Joining</th></tr></thead><tbody>
+{% for p in pl %}<tr><td>{{ p.full_name }}</td><td>{{ p.company_name }}</td><td>{{ p.final_package_lpa }} LPA</td><td>{{ p.joining_status|badge }}</td></tr>{% else %}<tr><td colspan="4">No placements yet.</td></tr>{% endfor %}</tbody></table></div></div></div>
+{% endblock %}

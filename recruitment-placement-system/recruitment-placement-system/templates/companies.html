@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% from '_m.html' import field %}{% set title = 'Companies' %}{% block body %}
+<form method="get" class="panel"><h3>Search Filters</h3><div class="grid">{{ field('Company Name','name',a.get('name','')) }}{{ field('Industry','industry',a.get('industry','')) }}{{ field('Location','location',a.get('location','')) }}
+{{ field('Status','status',a.get('status',''),'select',O(['ACTIVE','INACTIVE'],True)) }}</div><div class="actions"><button class="btn" type="submit">Search</button><a class="btn sec" href="{{ url_for('companies') }}">Reset</a><a class="btn green" href="#form">Add Company</a></div></form>
+<form method="post" class="card" id="form"><h3>{{ 'Edit Company' if f.get('company_id') else 'Add Company' }}</h3><input type="hidden" name="company_id" value="{{ f.get('company_id','') }}"><div class="grid">
+{{ field('Company Name','company_name',f.get('company_name',''),req=True,err=e.company_name) }}{{ field('Industry','industry',f.get('industry',''),req=True,err=e.industry) }}{{ field('Website','website',f.get('website',''),'url') }}
+{{ field('Location','location',f.get('location',''),req=True,err=e.location) }}{{ field('HR Name','hr_name',f.get('hr_name',''),req=True,err=e.hr_name) }}{{ field('HR Email','hr_email',f.get('hr_email',''),'text',req=True,err=e.hr_email) }}
+{{ field('HR Mobile','hr_mobile',f.get('hr_mobile',''),err=e.hr_mobile) }}{{ field('Company Type','company_type',f.get('company_type','MNC'),'select',O(['MNC','STARTUP','MID_SIZE','CONSULTANCY']),req=True) }}
+{{ field('Status','status',f.get('status','ACTIVE'),'select',O(['ACTIVE','INACTIVE']),req=True) }}</div>
+<div class="actions"><button class="btn" type="submit">{{ 'Update' if f.get('company_id') else 'Save' }}</button><a class="btn sec" href="{{ url_for('companies') }}">Reset</a></div></form>
+<div class="card"><h3>Company List</h3><div class="tw"><table><thead><tr><th>ID</th><th>Company</th><th>Industry</th><th>Location</th><th>HR Contact</th><th>HR Email</th><th>Type</th><th>Status</th><th>Open Jobs</th><th>Actions</th></tr></thead><tbody>
+{% for c in rows %}<tr><td>{{ c.company_code }}</td><td>{{ c.company_name }}</td><td>{{ c.industry }}</td><td>{{ c.location }}</td><td>{{ c.hr_name }}</td><td>{{ c.hr_email }}</td><td>{{ c.company_type }}</td><td>{{ c.status|badge }}</td>
+<td><a href="{{ url_for('jobs', company=c.company_id) }}">{{ c.open_jobs }} Open Jobs</a></td><td><a class="btn sm sec" href="{{ url_for('companies', edit=c.company_id) }}#form">Edit</a></td></tr>{% else %}<tr><td colspan="10">No companies found.</td></tr>{% endfor %}</tbody></table></div></div>
+{% endblock %}

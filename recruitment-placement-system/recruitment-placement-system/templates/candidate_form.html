@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% from '_m.html' import field %}{% set title = 'Edit Candidate' if cid else 'Add Candidate' %}{% block body %}
+{% if e %}<div class="alert err">Please correct the highlighted fields before saving.</div>{% endif %}
+<form method="post" class="card"><div class="sec-t">Personal Information</div><div class="grid">
+{{ field('Full Name','full_name',f.get('full_name',''),req=True,err=e.full_name) }}{{ field('Email','email',f.get('email',''),'text',req=True,err=e.email,help='Must be unique') }}
+{{ field('Mobile','mobile',f.get('mobile',''),req=True,err=e.mobile,help='10-digit mobile') }}{{ field('Date of Birth','date_of_birth',f.get('date_of_birth',''),'date') }}
+{{ field('Gender','gender',f.get('gender',''),'select',[('','Select'),('Male','Male'),('Female','Female'),('Other','Other')]) }}</div>
+<div class="sec-t">Academic Information</div><div class="grid">
+{{ field('Qualification','qualification',f.get('qualification','BE'),'select',O(quals),req=True) }}{{ field('College','college',f.get('college',''),req=True,err=e.college) }}{{ field('University','university',f.get('university','')) }}
+{{ field('Passing Year','passing_year',f.get('passing_year','2025')|string,'select',O(years),req=True,err=e.passing_year) }}{{ field('Percentage / CGPA','percentage',f.get('percentage',''),'number',req=True,err=e.percentage,attrs='step="0.01"') }}
+{{ field('Backlog Count','backlog_count',f.get('backlog_count',0),'number',req=True,err=e.backlog_count,attrs='min="0"') }}</div>
+<div class="sec-t">Skills</div><div class="grid">{{ field('Primary Technology','primary_technology',f.get('primary_technology','Java'),'select',O(techs),req=True) }}
+{{ field('Secondary Skills','skills',f.get('skills',[]),'select',skills,multi=True,help='Hold Ctrl / Cmd to select several') }}
+{{ field('Skill Level','skill_level',f.get('skill_level',''),'select',[('','Select'),('BASIC','Basic'),('INTERMEDIATE','Intermediate'),('ADVANCED','Advanced')]) }}</div>
+<div class="sec-t">Placement Preferences</div><div class="grid">{{ field('Current Location','current_location',f.get('current_location','')) }}{{ field('Preferred Location','preferred_location',f.get('preferred_location','')) }}
+{{ field('Profile Status','profile_status',f.get('profile_status','ACTIVE'),'select',O(['ACTIVE','INACTIVE','ON_HOLD','BLACKLISTED']),req=True) }}</div>
+<div class="actions"><button class="btn" type="submit">{{ 'Update' if cid else 'Save' }}</button><a class="btn sec" href="{{ url_for('candidates') }}">Cancel</a></div></form>
+{% endblock %}

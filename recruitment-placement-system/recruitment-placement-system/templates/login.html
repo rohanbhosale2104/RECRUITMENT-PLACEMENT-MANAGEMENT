@@ -1,0 +1,8 @@
+{% from '_m.html' import field %}<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login | Recruitment &amp; Placement Management System</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head><body><div class="login"><div class="lbox"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Kiran Academy">
+<h1>Recruitment &amp; Placement Management System</h1><p class="s">Authorized users only</p>
+{% if error %}<div class="alert err">{{ error }}</div>{% endif %}
+<form method="post">{{ field('Username / Email', 'username', f.get('username', 'recruiter@demo.com'), req=True) }}{{ field('Password', 'password', '', 'password', req=True) }}
+{{ field('Role', 'role', f.get('role', 'RECRUITER'), 'select', [('ADMIN','Admin'),('RECRUITER','Recruiter'),('PLACEMENT_OFFICER','Placement Officer')], req=True) }}
+<div class="actions"><button class="btn" type="submit">Login</button><a class="btn sec" href="{{ url_for('login') }}">Reset</a></div></form>
+<p style="text-align:center;margin-top:16px"><a href="#">Forgot Password?</a></p><p class="muted" style="text-align:center">Demo password: Demo@123</p></div></div></body></html>
